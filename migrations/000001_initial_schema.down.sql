@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS audit_logs;
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS leave_approvals;
+DROP TABLE IF EXISTS leave_requests;
+DROP TABLE IF EXISTS leave_balances;
+DROP TABLE IF EXISTS leave_types;
+DROP TABLE IF EXISTS attendance_records;
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS positions;
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS refresh_sessions;
+DROP TABLE IF EXISTS role_permissions;
+DROP TABLE IF EXISTS user_roles;
+DROP TABLE IF EXISTS permissions;
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS users;
