@@ -33,6 +33,15 @@ func (h *Handler) List(c *gin.Context) {
 	httputil.List(c, "Employees retrieved successfully", items, httputil.NewMeta(page, limit, total))
 }
 
+func (h *Handler) AvailableUsers(c *gin.Context) {
+	items, err := h.service.AvailableUsers(c.Request.Context())
+	if err != nil {
+		httputil.WriteDomainError(c, err)
+		return
+	}
+	httputil.OK(c, http.StatusOK, "Available application users retrieved successfully", items)
+}
+
 func (h *Handler) Get(c *gin.Context) {
 	id, ok := parseID(c)
 	if !ok {

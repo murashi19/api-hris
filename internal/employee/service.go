@@ -33,6 +33,23 @@ type Input struct {
 	ManagerID      *uint64 `json:"managerId"`
 }
 
+type AvailableUser struct {
+	ID    uint64 `json:"id"`
+	Email string `json:"email"`
+}
+
+func (s *Service) AvailableUsers(ctx context.Context) ([]AvailableUser, error) {
+	var users []AvailableUser
+	err := s.db.WithContext(ctx).
+		Model(&model.User{}).
+		Select("users.id, users.email").
+		Joins("LEFT JOIN employees ON employees.user_id = users.id AND employees.deleted_at IS NULL").
+		Where("users.is_active = ? AND employees.id IS NULL", true).
+		Order("users.email ASC").
+		Scan(&users).Error
+	return users, err
+}
+
 func (s *Service) List(ctx context.Context, search, status string, departmentID *uint64, page, limit, offset int) ([]model.Employee, int64, error) {
 	query := s.db.WithContext(ctx).Model(&model.Employee{})
 	if search != "" {
@@ -134,6 +151,13 @@ func (i Input) toModel() (model.Employee, error) {
 }
 
 func validateReferences(ctx context.Context, db *gorm.DB, employee *model.Employee, ownID uint64) error {
+	if employee.UserID != nil {
+		var count int64
+		db.WithContext(ctx).Model(&model.User{}).Where("id = ? AND is_active = true", *employee.UserID).Count(&count)
+		if count == 0 {
+			return httputil.NewDomainError(http.StatusUnprocessableEntity, "INVALID_USER", "Active application user does not exist")
+		}
+	}
 	if employee.ManagerID != nil {
 		if *employee.ManagerID == ownID && ownID != 0 {
 			return httputil.NewDomainError(http.StatusUnprocessableEntity, "INVALID_MANAGER", "Employee cannot be their own manager")

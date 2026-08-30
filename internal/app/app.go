@@ -55,6 +55,7 @@ func New(cfg config.Config, db *gorm.DB, redisClient *redis.Client, log *slog.Lo
 	employees := authenticated.Group("/employees")
 	employees.GET("", middleware.RequirePermission("employee.read"), employeeHandler.List)
 	employees.POST("", middleware.RequirePermission("employee.create"), employeeHandler.Create)
+	employees.GET("/available-users", middleware.RequireAnyPermission("employee.create", "employee.update"), employeeHandler.AvailableUsers)
 	employees.GET("/:id", middleware.RequirePermission("employee.read"), employeeHandler.Get)
 	employees.PATCH("/:id", middleware.RequirePermission("employee.update"), employeeHandler.Update)
 	departmentHandler := department.NewHandler(department.NewService(db))
