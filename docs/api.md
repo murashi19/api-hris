@@ -18,6 +18,7 @@ Login menerima `{ "email", "password" }`. Refresh token tidak ada di JSON; brows
 | Method | Endpoint | Permission |
 |---|---|---|
 | GET/POST | `/employees` | `employee.read` / `employee.create` |
+| GET | `/employees/available-users` | `employee.create` / `employee.update` |
 | GET/PATCH | `/employees/:id` | `employee.read` / `employee.update` |
 | GET | `/departments` | `department.read` |
 | POST/PATCH | `/departments[/:id]` | `department.manage` |
@@ -29,6 +30,8 @@ Login menerima `{ "email", "password" }`. Refresh token tidak ada di JSON; brows
 | GET | `/attendance` | `attendance.all.read` |
 
 List employees mendukung `page`, `limit`, `search`, `status`, dan `departmentId`. List attendance mendukung `page`, `limit`, `employeeId`, `startDate`, dan `endDate`.
+
+`GET /employees/available-users` mengembalikan user aktif yang belum terhubung ke employee. Response hanya mengekspos `id` dan `email` untuk kebutuhan form employee.
 
 ## Leave
 
